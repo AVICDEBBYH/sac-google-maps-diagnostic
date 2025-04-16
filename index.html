@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SAC Google Maps Referer 測試工具</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 20px;
+      }
+      #map {
+        width: 100%;
+        height: 400px;
+        margin-top: 20px;
+        border: 1px solid #ccc;
+      }
+      .status {
+        margin-top: 10px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>🧪 SAC Google Maps Referer 測試工具</h2>
+    <p>目前頁面 Referer（由瀏覽器送出給 Google）：</p>
+    <pre id="referer">偵測中...</pre>
+    <div class="status" id="status">初始化中...</div>
+    <div id="map"></div>
+
+    <script>
+      document.getElementById("referer").textContent = document.referrer || window.location.href;
+
+      function initMap() {
+        try {
+          const map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: 25.033964, lng: 121.564468 },
+            zoom: 14
+          });
+
+          new google.maps.Marker({
+            position: { lat: 25.033964, lng: 121.564468 },
+            map: map,
+            title: "台北101"
+          });
+
+          document.getElementById("status").textContent = "✅ 地圖成功載入，API 金鑰授權正常";
+        } catch (e) {
+          document.getElementById("status").textContent = "❌ Google Maps 初始化失敗";
+        }
+      }
+
+      window.gm_authFailure = () => {
+        document.getElementById("status").textContent = "❌ 金鑰驗證失敗（gm_authFailure），Referer 未授權";
+      };
+    </script>
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFgPiVmNInyejokQMww2u7Dzi7SsH9GB8&callback=initMap"></script>
+  </body>
+</html>
